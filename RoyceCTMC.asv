@@ -10,21 +10,21 @@ set(0,'DefaultAxesFontSize', 18)
 set(gca,'fontsize',18);
 
 % Parameters
-beta_ww=.89*3; beta_wd=.51; beta_dd=.89; beta_td=.5; beta_th=.5; beta_hh=.078; %transmission rates
+beta_ww=.89; beta_wd=.51; beta_dd=.89; beta_td=.5; beta_th=.5; beta_hh=.078; %transmission rates
 gamma_w=.981; gamma_d=.981; gamma_h=0.091; %recovery rates
 mu_dt=.499; %mutation to human transmissable 
 m_w=1; m_d=1; m_h=.009; %death rates
 b_w=1000; b_d=1000; b_h=1000*0.0118; %birth rates
 
 % Initial Conditions
-i0_w=20;i0_d=0; i0_h=0; t0_d=0; %initial infected
+i0_w=2;i0_d=0; i0_h=0; t0_d=0; %initial infected
 N0_w=1000;N0_d=1000; N0_h=1000; %Initial population
 r0_w=0; r0_d=0; r0_h=0; %initial recovered
 s0_w=1000; s0_d=N0_d; s0_h=N0_h; %initial susceptible
 
 totext=0; % count when j==0;
 % Number of sampe paths, time step, and end time
-sim = 10; outbreak=200;
+sim = 10; outbreak=50;
 
 
 
@@ -372,7 +372,7 @@ end
 
 %plot(t,i_h,'k--','LineWidth',2);
 title('CTMC Royce Model')
-legend('ih', 'iw', 'id')
+legend('')
 ylabel('Infections');
 xlabel('Time (days)')
 hold off
