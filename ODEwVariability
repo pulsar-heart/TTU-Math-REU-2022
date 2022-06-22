@@ -1,14 +1,59 @@
-clear all;
+%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% SIR Epidemic Model
+% with disease-relatd deaths
+% Sample Paths for CTMC  models
+% ODE model:
+% ds/dt=-beta is/N;
+% di/dt= beta is/N-(gam +alp)*i;
+% dr/dt= gam*i;
+% %%%%%%%%%%%%%%%%%%%%%%%%
+dbstop if error
+clear all
+close all
+set(0,'DefaultAxesFontSize', 18)
+set(gca,'fontsize',18);
+%Parameters and Initial Condition
 
-% parameter values
+beta_ww=0;
+beta_wd=.51; beta_dd=.89; beta_td=.89; beta_th=.207; beta_hh=0.078; %transmission rates
+gamma_w=.981; gamma_d=.981; gamma_h=.091; %recovery rates
+mu_dt=.499; %mutation to human transmissable 
+m_w=.0123; m_d=1; m_h=.009; %death rates
+ b_d=1000; b_h=.0118; %birth rates
+i0_w=500;i0_d=0; i0_h=0; t0_d=0; %initial infected
+N0_w=100000; N0_d=100000; N0_h=100000; %Initial population
+r0_w=0; r0_d=0; r0_h=0; %initial recovered
+s0_w=500; s0_d=1000; s0_h=1000; %initial susceptible
 
 
+totext=0; % count when i==0;
+%Number of sampe paths, time step, and end time
+sim=100; 
+dt=0.01; time=100;  outbreak=50;
+%sim=10^5; %use for calc of dis extinction
+% ODE Model (Euler's Method)
 
+q(1)=s0_w; s(1)=i0_w; a(1)=r0_w; Nw=q(1)+s(1)+a(1);
 
+for k=1:time/dt
+   if sin(k*(pi/180))-.5>0;
+       b_w=.0123;
+   elseif sin(k*(pi/180))-.5<=0;
+       b_w=0;
+   end
+  w1=Nw*b_w-beta_ww*q(k)*s(k)/Nw-m_w*q(k);
+  w2=beta_ww*q(k)*s(k)/Nw-(gamma_w+m_w)*s(k);
+  w3=gamma_w*s(k)-m_w*a(k);
+  q(k+1)=q(k)+dt*w1;
+  s(k+1)=s(k)+dt*w2;
+  a(k+1)=a(k)+dt*w3;
+  Nw=q(k+1)+s(k+1)+a(k+1);
+end
 
-
-
-f = @(params) [Lambda(t) - beta(t)*S*I/N - mu*S ...
-    beta(t)*S*I/N - (mu + gamma)*I ...
-    gamma*I - mu*R ...
-    Lambda(t) - mu*N]
+plot([0:dt:time],q,'k--',[0:dt:time],s,'b-.',[0:dt:time],a,'r--','LineWidth',2);
+axis([0,time,0,1000]);
+title('ODE SIR with periodic birth rate')
+legend('susceptible','infected','recovered')
+ylabel('wild birds');
+xlabel('Time (days)')
+hold off
