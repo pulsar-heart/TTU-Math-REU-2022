@@ -29,9 +29,9 @@ sim = 10; outbreak=50;
 
 
 % CTMC Model (Gillespie's algorithm)
-for k=1:sim
+for k=1
 clear s_h s_w s_d i_w i_d i_h t_d r_h r_w r_d t N_h N_d N_w j
-prealloc_size = 5000;
+prealloc_size = 10;
 s_h = zeros(prealloc_size, 1); s_w = zeros(prealloc_size,1); s_d = zeros(prealloc_size,1);
 i_h = zeros(prealloc_size, 1); i_w = zeros(prealloc_size,1); i_d = zeros(prealloc_size,1); t_d = zeros(prealloc_size,1);
 r_h = zeros(prealloc_size, 1); r_w = zeros(prealloc_size,1); r_d = zeros(prealloc_size,1);
@@ -46,7 +46,7 @@ N_w = 2; N_d = 2; N_h = 2;
 
 % While loop
 while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak && N_w > 1 && N_d > 1 && N_h > 1 
-
+%while j < 5
   u1=rand;  u2=rand; % two uniform random numbers
 
   N_w=s_w(j)+i_w(j)+r_w(j); % set population sizes
@@ -85,6 +85,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
   t(j+1)=t(j)-log(u1)/sum; % interevent time
 
   if u2 <= ev1 % birth of wild bird
+    %disp('birth of wild bird')
     s_w(j+1)=s_w(j)+1;
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -96,6 +97,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev1 && u2<=ev2 %death of sw
+    %disp('death of sw')
     s_w(j+1)=s_w(j)-1;
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -107,6 +109,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev2 && u2<=ev3 %death of Iw
+    %disp('death of Iw')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j)-1;
     r_w(j+1)=r_w(j);
@@ -118,6 +121,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev3 && u2<=ev4 %infection of wild bird
+    %disp('infection of wild bird')
     s_w(j+1)=s_w(j)-1;
     i_w(j+1)=i_w(j)+1;
     r_w(j+1)=r_w(j);
@@ -129,6 +133,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev4 && u2<=ev5 %recovery of wild bird
+    %disp('recovery of wild bird')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j)-1;
     r_w(j+1)=r_w(j)+1;
@@ -140,6 +145,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev5 && u2<=ev6 %death of rw
+    %disp('death of rw')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j)-1;
@@ -151,6 +157,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev6 && u2<=ev7 %birth of chicken
+    %disp('birth of chicken')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -162,6 +169,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev7 && u2<=ev8 %infection of sd by id or iw
+    %disp('infection of sd by id or iw')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -173,6 +181,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev8 && u2<=ev9 %infection of sd by td
+    %disp('infection of sd by td')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -183,7 +192,8 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     s_h(j+1)=s_h(j);
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
-    elseif u2>ev9 && u2<=ev10 %recovery of id
+  elseif u2>ev9 && u2<=ev10 %recovery of id
+    %disp('recovery of id')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -195,6 +205,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev10 && u2<=ev11 %recovery of td
+    %disp('recovery of td')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -206,6 +217,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev11 && u2<=ev12 %death of sd
+    %disp('death of sd')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -216,7 +228,8 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     s_h(j+1)=s_h(j);
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
-    elseif u2>ev12 && u2<=ev13 %death of id
+  elseif u2>ev12 && u2<=ev13 %death of id
+    %disp('death of id')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -228,6 +241,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev13 && u2<=ev14 %death of td
+    %disp('death of td')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -239,6 +253,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev14 && u2<=ev15 %death of rd
+    %disp('death of rd')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -249,7 +264,8 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     s_h(j+1)=s_h(j);
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
-     elseif u2>ev15 && u2<=ev16 %mutation of id
+  elseif u2>ev15 && u2<=ev16 %mutation of id
+    %disp('mutation of id')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -261,6 +277,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev16 && u2<=ev17 %birth of human
+    %disp('birth of human')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -272,6 +289,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev17 && u2<=ev18 %infection of human
+    %disp('infection of human')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -282,7 +300,8 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     s_h(j+1)=s_h(j);
     i_h(j+1)=i_h(j)+1;
     r_h(j+1)=r_h(j);
-     elseif u2>ev18 && u2<=ev19 %death of sh
+  elseif u2>ev18 && u2<=ev19 %death of sh
+    %disp('death of sh')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -294,6 +313,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j);
   elseif u2>ev19 && u2<=ev20 %death of ih
+    %disp('death of ih')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -305,6 +325,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j)-1;
     r_h(j+1)=r_h(j);
   elseif u2>ev20 && u2<=ev21 %death of rh
+    %disp('death of rh')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -316,6 +337,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
     i_h(j+1)=i_h(j);
     r_h(j+1)=r_h(j)-1;
   elseif u2>ev21 && u2<=ev22 %Recovery of Ih
+    %disp('recovery of ih')
     s_w(j+1)=s_w(j);
     i_w(j+1)=i_w(j);
     r_w(j+1)=r_w(j);
@@ -331,22 +353,23 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
   
 end  
 % resize vectors to remove zeros at end
-s_h = s_h(1:j); s_w = (1:j); s_d = (1:j); 
-i_h = (1:j); i_w = (1:j); i_d = (1:j); t_d = (1:j); 
-r_h = (1:j); r_w = (1:j); r_d = (1:j); 
-t = (1:j); 
+s_h = s_h(1:j, 1); s_w = s_w(1:j, 1); s_d = s_d(1:j,1); 
+i_h = i_h(1:j); i_w = i_w(1:j); i_d = i_d(1:j); t_d = t_d(1:j); 
+r_h = r_h(1:j); r_w = r_w(1:j); r_d = r_d(1:j); 
+t = t(1:j); 
+
 
 if k==1
     disp(size(t))
-stairs(t,i_h,'color',rand(1,3),'Linewidth',2);
-hold on
+    stairs(t,i_h,'red','Linewidth',2);
+    hold on
 end
 if i_h(j)+i_w(j)+i_d(j)==0
     totext=totext+1;
 end
 end
 
-plot(t,i_h,'k--','LineWidth',2);
+%plot(t,i_h,'k--','LineWidth',2);
 title('CTMC Royce Model')
 ylabel('I_h(t)');
 xlabel('Time (days)')
