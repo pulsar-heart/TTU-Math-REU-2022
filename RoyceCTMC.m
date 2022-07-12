@@ -10,28 +10,28 @@ set(0,'DefaultAxesFontSize', 18)
 set(gca,'fontsize',18);
 
 % Parameters
-beta_ww=.89*3; beta_wd=.51; beta_dd=.89; beta_td=.5; beta_th=.5; beta_hh=.078; %transmission rates
+beta_ww=.89*3; beta_wd=.51; beta_dd=.89; beta_td=.5; beta_th=.207; beta_hh=.078; %transmission rates
 gamma_w=.981; gamma_d=.981; gamma_h=0.091; %recovery rates
 mu_dt=.499; %mutation to human transmissable 
 m_w=1; m_d=1; m_h=.009; %death rates
 b_w=1000; b_d=1000; b_h=1000*0.0118; %birth rates
 
 % Initial Conditions
-i0_w=20;i0_d=0; i0_h=0; t0_d=0; %initial infected
+i0_w=1;i0_d=0; i0_h=0; t0_d=0; %initial infected
 N0_w=1000;N0_d=1000; N0_h=1000; %Initial population
 r0_w=0; r0_d=0; r0_h=0; %initial recovered
 s0_w=1000; s0_d=N0_d; s0_h=N0_h; %initial susceptible
 
 totext=0; % count when j==0;
 % Number of sampe paths, time step, and end time
-sim = 10; outbreak=200;
-
+sim = 2000; outbreak=100;
+prealloc_size = 300000;
 
 
 % CTMC Model (Gillespie's algorithm)
-for k=1
+for k=1:sim
 clear s_h s_w s_d i_w i_d i_h t_d r_h r_w r_d t N_h N_d N_w j
-prealloc_size = 10;
+
 s_h = zeros(prealloc_size, 1); s_w = zeros(prealloc_size,1); s_d = zeros(prealloc_size,1);
 i_h = zeros(prealloc_size, 1); i_w = zeros(prealloc_size,1); i_d = zeros(prealloc_size,1); t_d = zeros(prealloc_size,1);
 r_h = zeros(prealloc_size, 1); r_w = zeros(prealloc_size,1); r_d = zeros(prealloc_size,1);
@@ -78,7 +78,7 @@ while  i_h(j)+i_d(j)+i_w(j)+t_d(j) > 0 && i_h(j)+i_d(j)+i_w(j)+t_d(j) < outbreak
   ev19=m_h*s_h(j)/sum+ev18; %death of sh
   ev20=m_h*i_h(j)/sum+ev19;% death of ih
   ev21=m_h*r_h(j)/sum+ev20;% death of rh
-  ev22=gamma_h*i_h(j)/sum+ev21;
+  ev22=gamma_h*i_h(j)/sum+ev21; % recovery of ih
   
   
 
@@ -359,21 +359,24 @@ r_h = r_h(1:j); r_w = r_w(1:j); r_d = r_d(1:j);
 t = t(1:j); 
 
 
-if k==1
+if k<=5
+%if k == 1
     disp(size(t))
-    Y = [i_h i_w i_d];
-    stairs(t, Y);
+    %Y = [i_w i_d i_h];
+    %stairs(t, Y)
+    
+    stairs(t, i_w);
     hold on
 end
-if i_h(j)+i_w(j)+i_d(j)==0
+if i_h(j)+i_w(j)+i_d(j) + t_d(j)==0
     totext=totext+1;
 end
 end
+prob_extinction = totext / sim
 
-%plot(t,i_h,'k--','LineWidth',2);
-title('CTMC Royce Model')
-legend('ih', 'iw', 'id')
-ylabel('Infections');
+title('Revised AIV Model', prob_extinction)
+%legend('iw', 'id', 'ih')
+ylabel('Infections in Wild Birds');
 xlabel('Time (days)')
 hold off
 
